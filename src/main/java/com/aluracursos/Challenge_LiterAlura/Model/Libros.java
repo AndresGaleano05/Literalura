@@ -4,39 +4,62 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-//@Entity
-//@Table(name= "Libros")
+@Entity
+@Table(name= "Libros")
 public class Libros {
+    /*private long Id: crea un identificador por cada serie, @Id es el identificador de la tabla
+    @GeneratedValue=El programa se encargar de generar automaticamente de crear el Id*/
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    //@Column(unique = true)=Se utilizapara que no hayan libros repetidos con el mismo nombre en este caso "Titulo"
+    @Column(unique = true)
     private String titulo;
-    private  String autor;
+    @ManyToOne                                 //cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "autor_id", nullable = false)
+    private Autor autor;
+
     private String idiomas;
     private Double numeroDeDescargas;
 
-
+    //Constructor
+    public Libros(){}
     // trae los datos del record DatosLibros
-    public Libros(DatosLibros datosLibros) {
+    public Libros(DatosLibros datosLibros, Autor autor) {
         this.titulo = datosLibros.titulo();
-        this.autor = String.valueOf(datosLibros.autor());
-        this.idiomas = String.valueOf(datosLibros.idiomas());
+        this.autor = autor;
+        //this.autores = convierteAutores(datosLibros.autores());
+        this.idiomas = String.join(", ",datosLibros.idiomas());
         this.numeroDeDescargas = datosLibros.numeroDeDescargas();
     }
 
-    //ToString
+    //ToString accede a lista de autores
 
     @Override
     public String toString() {
+        //identifica si hay autores y obtiene el nombre del primer autor
+        //String autorStr = (autor != null && !autores.isEmpty()) ? autores.get(0).getNombre() : "Autor desconocido";
+
         return
-                "id=" + id +
-                ", titulo='" + titulo + '\'' +
-                ", autor='" + autor + '\'' +
-                ", idiomas='" + idiomas + '\'' +
-                ", numeroDeDescargas=" + numeroDeDescargas;
+                "titulo: " + titulo + "\n" +
+                "nombre del autor: " + (autor != null ? autor.getNombre(): "Desconocido") + "\n" +
+                "idiomas: " + idiomas + "\n" +
+                "numero de descargas: " + numeroDeDescargas;
     }
 
 
     // getter y setter
+
+
+    public Autor getAutor() {
+        return autor;
+    }
+
+    public void setAutor(Autor autor) {
+        this.autor = autor;
+    }
 
     public long getId() {
         return id;
@@ -54,13 +77,13 @@ public class Libros {
         this.titulo = titulo;
     }
 
-    public String getAutor() {
-        return autor;
-    }
-
-    public void setAutor(String autor) {
-        this.autor = autor;
-    }
+//    public List<Autor> getAutor() {
+//        return autores;
+//    }
+//
+//    public void setAutor(List<Autor> autor) {
+//        this.autores = autor;
+//    }
 
     public String getIdiomas() {
         return idiomas;
@@ -77,4 +100,6 @@ public class Libros {
     public void setNumeroDeDescargas(Double numeroDeDescargas) {
         this.numeroDeDescargas = numeroDeDescargas;
     }
+
+
 }
