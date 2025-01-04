@@ -178,9 +178,6 @@ public class Principal {
             System.out.println("Autor N° " + (i + 1));
             System.out.println(autor);
         }
-
-
-
     }
 }
 

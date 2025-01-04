@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Entity
 @Table(name="Autores")
 public class Autor {
@@ -18,6 +19,7 @@ public class Autor {
     private String fechaDeNacimiento;
     private String fechaDeFallecimiento;
     @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+
     private List<Libros> libros = new ArrayList<>();
 
     //Constructor
