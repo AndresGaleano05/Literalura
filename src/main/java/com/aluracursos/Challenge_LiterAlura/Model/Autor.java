@@ -1,8 +1,8 @@
 package com.aluracursos.Challenge_LiterAlura.Model;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,18 +14,19 @@ public class Autor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(name = "nombre")//Especifica el nombre de la columna
     private String nombre;
-    private String fechaDeNacimiento;
-    private String fechaDeFallecimiento;
+    @Column(name = "fecha_de_nacimiento")//Especifica el nombre de la columna
+    private Integer fechaDeNacimiento;
+    @Column(name = "fecha_de_fallecimiento")
+    private Integer fechaDeFallecimiento;
     @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-
     private List<Libros> libros = new ArrayList<>();
 
     //Constructor
     public Autor(){}
 
-    public Autor(String nombre, String fechaDeNacimiento, String fechaDeFallecimiento) {
+    public Autor(String nombre, Integer fechaDeNacimiento, Integer fechaDeFallecimiento) {
         this.nombre = nombre;
         this.fechaDeNacimiento = fechaDeNacimiento;
         this.fechaDeFallecimiento = fechaDeFallecimiento;
@@ -75,19 +76,19 @@ public class Autor {
         this.nombre = nombre;
     }
 
-    public String getFechaDeNacimiento() {
+    public Integer getFechaDeNacimiento() {
         return fechaDeNacimiento;
     }
 
-    public void setFechaDeNacimiento(String fechaDeNacimiento) {
+    public void setFechaDeNacimiento(Integer fechaDeNacimiento) {
         this.fechaDeNacimiento = fechaDeNacimiento;
     }
 
-    public String getFechaDeFallecimiento() {
+    public Integer getFechaDeFallecimiento() {
         return fechaDeFallecimiento;
     }
 
-    public void setFechaDeFallecimiento(String fechaDeFallecimiento) {
-        this.fechaDeFallecimiento = fechaDeFallecimiento;
+    public void setFechaDeFallecimiento(Integer fechaDeFallecimiento) {
+        this.fechaDeFallecimiento =fechaDeFallecimiento;
     }
 }

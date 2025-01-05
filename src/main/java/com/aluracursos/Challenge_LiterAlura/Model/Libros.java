@@ -77,14 +77,6 @@ public class Libros {
         this.titulo = titulo;
     }
 
-//    public List<Autor> getAutor() {
-//        return autores;
-//    }
-//
-//    public void setAutor(List<Autor> autor) {
-//        this.autores = autor;
-//    }
-
     public String getIdiomas() {
         return idiomas;
     }
@@ -100,6 +92,4 @@ public class Libros {
     public void setNumeroDeDescargas(Double numeroDeDescargas) {
         this.numeroDeDescargas = numeroDeDescargas;
     }
-
-
 }

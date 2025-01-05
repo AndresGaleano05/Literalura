@@ -10,6 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class Principal {
@@ -18,8 +19,7 @@ public class Principal {
     private ConsumoApi consumoApi = new ConsumoApi();
     private ConvierteDatos conversor = new ConvierteDatos();
     private Scanner teclado = new Scanner(System.in);
-    private List<DatosLibros> datosLibros = new ArrayList<>();
-    private List<DatosAutor> autor = new ArrayList<>();
+
     @Autowired//Es para que sea correctamente inyectado por Spring
     private LibrosRepository LibrosRepositorio;
     @Autowired//Es para que sea correctamente inyectado por Spring
@@ -65,7 +65,8 @@ public class Principal {
                 break;
 
                 case 4:
-
+                    autoresVivosPorAño();
+                    break;
 
                 case 5:
 
@@ -179,8 +180,36 @@ public class Principal {
             System.out.println(autor);
         }
     }
-}
 
+    private void autoresVivosPorAño() {
+        System.out.println("Escribe el año para validar que autores estaban vivos");
+        int año = teclado.nextInt();
+        teclado.nextLine();
+
+        try {
+            //Se llama al repositorio y se obtiene los autores vivos en el año indicado por el usuario
+            List<Autor> autores = AutoresRepositorio.findAutoresVivosEnAño(año);
+            if (autores.isEmpty()) {
+                System.out.println("No se encontraron autores vivos en el año: " + año);
+            } else {
+                System.out.println("Autores vivos en el año: " + año);
+                autores.forEach(a -> {
+                    System.out.println(
+
+                            "\n" +"**********************************************"+ "\n" +
+                            "Autor: " + a.getNombre() + "\n" +
+                            "Fecha de nacimiento: " + (a.getFechaDeNacimiento() != null ? a.getFechaDeNacimiento() : "Desconocido") + "\n" +
+                            "Fecha de fallecimiento: " + (a.getFechaDeFallecimiento() != null ? a.getFechaDeFallecimiento() : "Aun vivo") + "\n" +
+                            "Libros del autor: " + (a.getLibros().stream().map(Libros::getTitulo).collect(Collectors.joining(", ")))
+                    );
+                });
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error en la consulta de Libros: " + e.getMessage());;
+        }
+    }
+}
 
 
 
