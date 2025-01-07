@@ -30,8 +30,11 @@ public class Libros {
     public Libros(DatosLibros datosLibros, Autor autor) {
         this.titulo = datosLibros.titulo();
         this.autor = autor;
-        //this.autores = convierteAutores(datosLibros.autores());
-        this.idiomas = String.join(", ",datosLibros.idiomas());
+        if (!datosLibros.idiomas().isEmpty()) {
+            this.idiomas = datosLibros.idiomas().get(0); // Toma el primer idioma de la lista
+        } else {
+            this.idiomas = null; // O asigna un valor por defecto si la lista está vacía
+        }
         this.numeroDeDescargas = datosLibros.numeroDeDescargas();
     }
 

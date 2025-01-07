@@ -69,6 +69,8 @@ public class Principal {
                     break;
 
                 case 5:
+                    buscarLibrosPorIdioma();
+                    break;
 
 
                 case 0:
@@ -80,6 +82,7 @@ public class Principal {
             }
         }
     }
+
 
     public Datos buscarPorTitulo() {
       System.out.println("Escribe el nombre del libro que deseas buscar para brindarte su información");
@@ -100,7 +103,7 @@ public class Principal {
             DatosAutor datosAutor = datosDelLibro.autores().get(0); // Tomamos el primer autor de la lista
             Autor autor;
 
-            Optional<Autor> autorExistente = AutoresRepositorio.findByNombreAndFechaDeNacimientoAndFechaDeFallecimiento(
+            Optional<Autor> autorExistente = AutoresRepositorio.obtenerAutorCrearAutor(
                     datosAutor.nombre(),
                     datosAutor.fechaDeNacimiento(),
                     datosAutor.fechaDeFallecimiento());
@@ -118,7 +121,7 @@ public class Principal {
             System.out.println(libro);
 
             // Verificamos si el libro ya está guardado en la base de datos
-            Optional<Libros> libroGuardado = LibrosRepositorio.findByTitulo(libro.getTitulo());
+            Optional<Libros> libroGuardado = LibrosRepositorio.verificarPorTitulo(libro.getTitulo());
 
             if (libroGuardado.isPresent()) {
                 System.out.println("**********************************************");
@@ -188,20 +191,15 @@ public class Principal {
 
         try {
             //Se llama al repositorio y se obtiene los autores vivos en el año indicado por el usuario
-            List<Autor> autores = AutoresRepositorio.findAutoresVivosEnAño(año);
+            List<Autor> autores = AutoresRepositorio.AutoresVivosPorAño(año);
             if (autores.isEmpty()) {
                 System.out.println("No se encontraron autores vivos en el año: " + año);
             } else {
                 System.out.println("Autores vivos en el año: " + año);
                 autores.forEach(a -> {
-                    System.out.println(
+                    System.out.println(a.toString());
+                    System.out.println("**********************************************");
 
-                            "\n" +"**********************************************"+ "\n" +
-                            "Autor: " + a.getNombre() + "\n" +
-                            "Fecha de nacimiento: " + (a.getFechaDeNacimiento() != null ? a.getFechaDeNacimiento() : "Desconocido") + "\n" +
-                            "Fecha de fallecimiento: " + (a.getFechaDeFallecimiento() != null ? a.getFechaDeFallecimiento() : "Aun vivo") + "\n" +
-                            "Libros del autor: " + (a.getLibros().stream().map(Libros::getTitulo).collect(Collectors.joining(", ")))
-                    );
                 });
             }
 
@@ -209,10 +207,30 @@ public class Principal {
             System.out.println("Error en la consulta de Libros: " + e.getMessage());;
         }
     }
+
+    private void buscarLibrosPorIdioma() {
+        System.out.println("Escriba el idioma para enseñarte el listado de libros relacionado");
+        String lenguaje = teclado.nextLine().trim(); // .trim() elimina espacios en blanco al principio y al final
+
+        Idioma idioma = Idioma.fromNombreCompleto(lenguaje);//intenta obtener el idioma por el nombre completo
+
+        if (idioma != null) {
+            try {
+                List<Libros> libros = LibrosRepositorio.registroPorIdiomas(idioma.getAbreviatura());
+                if (libros.isEmpty()) {
+                    System.out.println("No se encontraron libros registrado por el idioma: " + lenguaje);
+                } else {
+                    System.out.println("Libros registrado en idioma: " + lenguaje);
+                    libros.forEach(l -> {
+                        System.out.println(l.toString());
+                        System.out.println("**********************************************");
+                    });
+                }
+            } catch (Exception e) {
+                System.out.println("Error en la consulta de idiomas: " + e.getMessage());
+            }
+        } else {
+            System.out.println("!Error idioma no reconocido¡. Por favor ingrese un idioma valido");
+        }
+    }
 }
-
-
-
-
-
-
