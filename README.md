@@ -1,4 +1,4 @@
-# literAlura
+# LiterAlura
 # Proyecto de búsqueda, registro de libros y autores
 
 Este proyecto es una aplicación Java para la búsqueda de libros mediante la API gutendex.com y la gestión de un registro local de libros y autores. 
